@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
@@ -16,7 +17,10 @@ def sample_pdf(tmp_path):
 
 def test_pdf_converter(caplog, sample_pdf):
     caplog.set_level(logging.INFO)
+    file_id = "test_file"
+    output_file = f"docs/examples/sciencebeam_xml_outputs/{file_id}.xml"
     runner = CliRunner()
-    result = runner.invoke(pdf_xml, [str(sample_pdf), "test_file"])
+    result = runner.invoke(pdf_xml, [str(sample_pdf), file_id])
     assert result.exit_code == 0
     assert f"Converted: {sample_pdf}" in caplog.text
+    assert Path(output_file).exists()
